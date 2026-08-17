@@ -6,7 +6,7 @@ export HOSTNAME="${HOSTNAME:-0.0.0.0}"
 
 envsubst '${PORT}' < /etc/nginx/templates/default.conf.template > /etc/nginx/conf.d/default.conf
 
-uvicorn app.main:app --host 127.0.0.1 --port 8000 &
+/opt/venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000 &
 BACKEND_PID="$!"
 
 PORT=3000 HOSTNAME=127.0.0.1 node /app/frontend/server.js &
