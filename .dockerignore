@@ -1,0 +1,16 @@
+.git
+.vercel
+.env
+.env.*
+*.pyc
+__pycache__/
+.pytest_cache/
+
+frontend/.git
+frontend/.next
+frontend/node_modules
+frontend/.env
+frontend/.env.*
+frontend/tsconfig.tsbuildinfo
+
+celerybeat-schedule.*
