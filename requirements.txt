@@ -15,4 +15,4 @@ anthropic
 celery[redis]
 openai
 pgvector
-fastapi-limiter
+fastapi-limiter==0.1.6
