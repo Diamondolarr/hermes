@@ -10,11 +10,34 @@ from app.models.workspace import Workspace
 from app.utils.security import hash_password
 
 
+def normalized_demo_email() -> str:
+    return settings.demo_user_email.strip().lower()
+
+
+def demo_user_id() -> str:
+    return str(uuid.uuid5(uuid.NAMESPACE_URL, f"hermes-demo-user:{normalized_demo_email()}"))
+
+
+def demo_workspace_id() -> str:
+    return str(
+        uuid.uuid5(uuid.NAMESPACE_URL, f"hermes-demo-workspace:{normalized_demo_email()}")
+    )
+
+
+def is_demo_identity(user_id: str, workspace_id: str) -> bool:
+    return (
+        settings.demo_user_enabled
+        and normalized_demo_email()
+        and user_id == demo_user_id()
+        and workspace_id == demo_workspace_id()
+    )
+
+
 def ensure_demo_user(db: Session) -> None:
     if not settings.demo_user_enabled:
         return
 
-    email = settings.demo_user_email.strip().lower()
+    email = normalized_demo_email()
     password = settings.demo_user_password
     if not email or len(password) < 8:
         raise RuntimeError(
@@ -33,8 +56,8 @@ def ensure_demo_user(db: Session) -> None:
             workspace = Workspace(id=user.workspace_id, user_id=user.id)
             db.add(workspace)
     else:
-        user_id = str(uuid.uuid4())
-        workspace_id = str(uuid.uuid4())
+        user_id = demo_user_id()
+        workspace_id = demo_workspace_id()
         workspace = Workspace(
             id=workspace_id,
             user_id=user_id,

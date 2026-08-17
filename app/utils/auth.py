@@ -7,6 +7,7 @@ from jose import JWTError, jwt
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
+from app.db.demo import is_demo_identity
 from app.db.session import get_db
 from app.models.token import UserSession
 from app.models.user import User
@@ -49,7 +50,10 @@ def get_current_user(
         )
         .first()
     )
-    if not session or session.expires_at < datetime.utcnow():
+    if (
+        (not session or session.expires_at < datetime.utcnow())
+        and not is_demo_identity(user_id, workspace_id)
+    ):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid or expired token.",
