@@ -9,7 +9,7 @@ envsubst '${PORT}' < /etc/nginx/templates/default.conf.template > /etc/nginx/con
 uvicorn app.main:app --host 127.0.0.1 --port 8000 &
 BACKEND_PID="$!"
 
-node /app/frontend/server.js --hostname 127.0.0.1 --port 3000 &
+PORT=3000 HOSTNAME=127.0.0.1 node /app/frontend/server.js &
 FRONTEND_PID="$!"
 
 shutdown() {
