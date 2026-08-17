@@ -9,7 +9,9 @@ from app.core.config import settings
 from app.core.security import validate_security_configuration
 from app.db.base import Base
 from app.db.bootstrap import ensure_database_extensions, ensure_schema_extensions
+from app.db.demo import ensure_demo_user
 from app.db.session import engine
+from app.db.session import SessionLocal
 from app.routers.activity_logs import router as activity_logs_router
 from app.routers.admin import router as admin_router
 from app.routers.approvals import router as approvals_router
@@ -40,6 +42,11 @@ async def lifespan(_: FastAPI):
     ensure_database_extensions(engine)
     Base.metadata.create_all(bind=engine)
     ensure_schema_extensions(engine)
+    db = SessionLocal()
+    try:
+        ensure_demo_user(db)
+    finally:
+        db.close()
     if settings.rate_limiting_enabled:
         try:
             redis_client = redis.from_url(

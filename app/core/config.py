@@ -53,6 +53,10 @@ class Settings(BaseSettings):
     gemini_analytics_model: str = Field(default="gemini-2.5-flash")
     anthropic_api_key: str = Field(default="")
     anthropic_model: str = Field(default="claude-sonnet-4-20250514")
+    demo_user_enabled: bool = Field(default=False)
+    demo_user_email: str = Field(default="")
+    demo_user_password: str = Field(default="")
+    demo_user_name: str = Field(default="Demo User")
 
     @property
     def parsed_cors_allowed_origins(self) -> list[str]:
